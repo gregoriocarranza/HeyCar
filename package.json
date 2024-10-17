@@ -1,12 +1,15 @@
 {
   "name": "heycar",
-  "main": "expo-router/entry",
+  "main": "expo/AppEntry.js",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "npx expo start -c",
+    "start:ngrok": "npx expo start -c --tunnel",
+    "android": "npx expo run:android",
+    "ios": "npx expo run:ios",
+    "build:dev": "eas build --profile development --platform android",
+    "build:prod": "eas build --platform android",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint"
