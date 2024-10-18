@@ -11,9 +11,8 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "src/app/Index.jsx",
-    "src/app/Register.jsx",
-    "src/app/Login.jsx",
-    "src/app/Home.jsx"
+    "src/pages/Register/Register.jsx",
+    "src/pages/Login-Register/Login.jsx",
+    "src/pages/Home/Home.jsx"
   ]
 }
