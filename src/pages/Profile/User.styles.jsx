@@ -34,39 +34,54 @@ const styles = StyleSheet.create({
   },
   vehicleCard: {
     alignSelf: "center",
-    marginBottom: 12, // Reducido para tener menos separación entre cards
-    elevation: 1, // Reducida la sombra para menos prominencia
-    borderRadius: 10, // Añadido para un aspecto más limpio
+    marginBottom: 12,
+    elevation: 1,
+    borderRadius: 10,
     width: screenWidth * 0.8,
-    // height: 150,
   },
   vehicleImage: {
-    height: 120, // Reducido para hacer el card más compacto
+    height: 120,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   vehicleCardActions: {
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "left",
+    alignItems: "flex-start",
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   vehicleCardNameSection: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "left",
+    alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   vehicleInfo: {
-    fontSize: 14, // Reducido el tamaño para hacer el texto más compacto
-    color: "#333", // Color más suave para menos prominencia
+    fontSize: 14,
+    color: "#333",
   },
   closeIcon: {
-    color: "#ff0000",
     width: 15,
     height: 15,
+  },
+  paginationContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    width: screenWidth * 0.9,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: "#007bff",
+  },
+  inactiveDot: {
+    backgroundColor: "#c0c0c0",
   },
   levelContainer: {
     marginVertical: 16,

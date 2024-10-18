@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  Dimensions,
+  FlatList,
+} from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Button as PaperButton, Card, IconButton } from "react-native-paper";
 import styles from "./User.styles";
@@ -11,6 +18,7 @@ const { width: screenWidth } = Dimensions.get("window");
 function Profile({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [userData, setUserData] = useState({});
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -22,7 +30,7 @@ function Profile({ navigation }) {
             const userDatas = {
               name: "Perfil Generico",
               image: null,
-              level: "nivel 1",
+              level: "1",
               vehicles: [
                 {
                   name: "Vehiculo-1",
@@ -84,6 +92,17 @@ function Profile({ navigation }) {
     );
   };
 
+  const renderDot = ({ item, index }) => {
+    return (
+      <View
+        style={[
+          styles.dot,
+          activeIndex === index ? styles.activeDot : styles.inactiveDot,
+        ]}
+      />
+    );
+  };
+
   return (
     <ScreenLayout showFooter={true} currentRoute={"Profile"}>
       <ScrollView contentContainerStyle={styles.profileContainer}>
@@ -115,11 +134,22 @@ function Profile({ navigation }) {
           width={screenWidth * 0.9}
           height={220}
           mode="left-align"
+          onSnapToItem={(index) => setActiveIndex(index)} // Actualiza el índice activo
+        />
+
+        {/* Indicadores de Paginación */}
+        <FlatList
+          data={userData?.vehicles || []}
+          renderItem={renderDot}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          contentContainerStyle={styles.paginationContainer}
         />
 
         {/* Nivel del Usuario */}
+        <Text style={styles.sectionTitle}>Tu nivel</Text>
         <View style={styles.levelContainer}>
-          <Text style={styles.levelText}>Eres: {userData?.level}</Text>
+          <Text style={styles.levelText}>Nivel: {userData?.level}</Text>
           <Text style={styles.levelDescription}>
             Seguí participando y cuidando tu vehículo para aumentar tu nivel y
             acceder a beneficios exclusivos.
