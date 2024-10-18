@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+const { width: screenWidth, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   profileContainer: {
@@ -32,28 +33,40 @@ const styles = StyleSheet.create({
     borderBottomColor: "#003366",
   },
   vehicleCard: {
-    marginBottom: 16,
-    elevation: 2,
+    alignSelf: "center",
+    marginBottom: 12, // Reducido para tener menos separación entre cards
+    elevation: 1, // Reducida la sombra para menos prominencia
+    borderRadius: 10, // Añadido para un aspecto más limpio
+    width: screenWidth * 0.8,
+    // height: 150,
   },
   vehicleImage: {
-    height: 150,
+    height: 120, // Reducido para hacer el card más compacto
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   vehicleCardActions: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "left",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  vehicleCardNameSection: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    padding: 8,
+    alignItems: "left",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
   vehicleInfo: {
-    fontSize: 16,
-    flex: 1,
+    fontSize: 14, // Reducido el tamaño para hacer el texto más compacto
+    color: "#333", // Color más suave para menos prominencia
   },
   closeIcon: {
-    alignSelf: "flex-start",
-  },
-  vehicleButton: {
-    backgroundColor: "#007bff",
-    marginLeft: 16,
+    color: "#ff0000",
+    width: 15,
+    height: 15,
   },
   levelContainer: {
     marginVertical: 16,
