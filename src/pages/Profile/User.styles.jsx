@@ -46,26 +46,37 @@ const styles = StyleSheet.create({
   },
   vehicleCardActions: {
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    marginBottom: 10,
   },
+
   vehicleCardNameSection: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    width: "100%",
   },
+
+  vehicleName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    flex: 1,
+  },
+
   vehicleInfo: {
     fontSize: 14,
-    color: "#333",
+    color: "#666",
+    marginTop: 4,
   },
+
   closeIcon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
+    backgroundColor: "#ffcccc",
   },
+
   paginationContainer: {
     flexDirection: "row",
     justifyContent: "center",
