@@ -1,11 +1,11 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, StatusBar } from "react-native";
 const { width, height } = Dimensions.get("window");
 import { DefaultTheme } from "react-native-paper";
 
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingTop: 45,
+    paddingTop: StatusBar.currentHeight + 20,
   },
   loadingContainer: {
     flex: 1,
