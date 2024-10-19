@@ -15,6 +15,7 @@ import {
 import { styles, theme } from "./App.Style";
 import * as SecureStore from "expo-secure-store";
 import UserLevelDetails from "./src/pages/Profile/Gamification/UserLevelDetails";
+import RegisterVehicleForm from "./src/Components/RegisterVehicleForm/RegisterVehicleForm";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -72,6 +73,16 @@ export default function App() {
               name="UserLevelDetails"
               options={{ title: "Nivel de usuario", headerShown: true }}
               component={UserLevelDetails}
+            />
+            <Stack.Screen
+              name="RegisterVehicle"
+              options={{ title: "Registra tu vehiculo", headerShown: true }}
+              component={RegisterVehicleForm}
+            />
+            <Stack.Screen
+              name="Notifications"
+              options={{ title: "Notificaciones", headerShown: true }} // TODO Hacer servicio de notificacioens basico
+              component={RegisterVehicleForm}
             />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />

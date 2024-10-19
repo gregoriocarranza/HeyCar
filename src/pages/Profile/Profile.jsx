@@ -6,19 +6,25 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Button as PaperButton, Card, IconButton } from "react-native-paper";
 import styles from "./User.styles";
 import ScreenLayout from "../../Components/ScreenLayout";
 import * as SecureStore from "expo-secure-store";
+import { useIsFocused } from "@react-navigation/native";
+import VehicleCard from "../../Components/VehicleCard/VehicleCard";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 function Profile({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [userData, setUserData] = useState({});
+  const [vehiclesData, setVehiclesData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const isFocused = useIsFocused();
+  const [scrollEnabled, setScrollEnabled] = useState(true);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -31,27 +37,27 @@ function Profile({ navigation }) {
               name: "Perfil Generico",
               image: null,
               level: "1",
-              vehicles: [
-                {
-                  name: "Vehiculo-1",
-                  model: "Volvo XC60",
-                  plate: "ABC123",
-                  year: 2020,
-                  km: 50000,
-                  image: null,
-                },
-                {
-                  name: "Vehiculo-2",
-                  model: "BMW X5",
-                  plate: "XYZ789",
-                  year: 2021,
-                  km: 30000,
-                  image: "https://via.placeholder.com/300",
-                },
-              ],
             };
-
             setUserData(userDatas);
+          }
+        }
+        const vehiclesJsonValue = await SecureStore.getItemAsync(
+          "VEHICLES_DATA"
+        );
+        if (vehiclesJsonValue) {
+          const vehiclesresult = JSON.parse(vehiclesJsonValue);
+          if (vehiclesresult) {
+            // const vehicles = [
+            //   {
+            //     name: "Vehiculo-2",
+            //     model: "BMW X5",
+            //     plate: "XYZ789",
+            //     year: 2021,
+            //     km: 30000,
+            //     image: "https://via.placeholder.com/300",
+            //   },
+            // ];
+            setVehiclesData(vehiclesresult);
           }
         }
       } catch (error) {
@@ -60,37 +66,7 @@ function Profile({ navigation }) {
     };
 
     loadUser();
-  }, []);
-
-  const renderVehicleItem = ({ item, index }) => {
-    return (
-      <Card key={index} style={styles.vehicleCard}>
-        <Card.Cover
-          source={
-            item?.image
-              ? { uri: item.image }
-              : require("../../assets/emptyCar.png")
-          }
-          style={styles.vehicleImage}
-        />
-        <Card.Actions style={styles.vehicleCardActions}>
-          <View style={styles.vehicleCardNameSection}>
-            <Text style={styles.vehicleName}>{item.name}</Text>
-            <IconButton
-              icon="close"
-              onPress={() => {}}
-              size={10}
-              color="red"
-              style={styles.closeIcon}
-            />
-          </View>
-          <Text style={styles.vehicleInfo}>
-            {item.model} - {item.plate} - {item.year} - {item.km} km
-          </Text>
-        </Card.Actions>
-      </Card>
-    );
-  };
+  }, [isFocused]);
 
   const renderDot = ({ item, index }) => {
     return (
@@ -105,7 +81,10 @@ function Profile({ navigation }) {
 
   return (
     <ScreenLayout showFooter={true} currentRoute={"Profile"}>
-      <ScrollView contentContainerStyle={styles.profileContainer}>
+      <ScrollView
+        contentContainerStyle={styles.profileContainer}
+        scrollEnabled={scrollEnabled}
+      >
         {/* Perfil de Usuario */}
         <View style={styles.profileHeader}>
           <Image
@@ -126,27 +105,34 @@ function Profile({ navigation }) {
           </PaperButton>
         </View>
 
-        {/* Información del Vehículo - Carrusel */}
         <Text style={styles.sectionTitle}>Mi/s Vehiculo/s</Text>
-        <Carousel
-          data={userData?.vehicles || []}
-          renderItem={renderVehicleItem}
-          width={screenWidth * 0.9}
-          height={220}
-          mode="left-align"
-          onSnapToItem={(index) => setActiveIndex(index)} // Actualiza el índice activo
-        />
+        {vehiclesData.length === 1 ? (
+          VehicleCard({ item: vehiclesData[0], index: 0 })
+        ) : (
+          <>
+            <Carousel
+              data={vehiclesData || []}
+              renderItem={VehicleCard}
+              width={screenWidth * 0.9}
+              height={220}
+              mode="left-align"
+              snapEnabled={true}
+              onSnapToItem={(index) => setActiveIndex(index)}
+              onScrollBegin={() => setScrollEnabled(false)}
+              onScrollEnd={() => setScrollEnabled(true)}
+            />
 
-        {/* Indicadores de Paginación */}
-        <FlatList
-          data={userData?.vehicles || []}
-          renderItem={renderDot}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          contentContainerStyle={styles.paginationContainer}
-        />
+            {/* Indicadores de Paginación */}
+            <FlatList
+              data={vehiclesData || []}
+              renderItem={renderDot}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal
+              contentContainerStyle={styles.paginationContainer}
+            />
+          </>
+        )}
 
-        {/* Nivel del Usuario */}
         <Text style={styles.sectionTitle}>Tu nivel</Text>
         <View style={styles.levelContainer}>
           <Text style={styles.levelText}>Nivel: {userData?.level}</Text>
@@ -163,11 +149,13 @@ function Profile({ navigation }) {
           </PaperButton>
         </View>
 
-        {/* Agregar otro vehículo */}
-        <View style={styles.addVehicleContainer}>
+        <TouchableOpacity
+          style={styles.addVehicleContainer}
+          onPress={() => navigation.navigate("RegisterVehicle")}
+        >
           <IconButton icon="plus" size={24} color="#003366" />
           <Text style={styles.addVehicleText}>Agregar otro vehículo</Text>
-        </View>
+        </TouchableOpacity>
       </ScrollView>
     </ScreenLayout>
   );
