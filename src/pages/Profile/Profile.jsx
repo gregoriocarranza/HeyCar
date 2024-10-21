@@ -106,13 +106,13 @@ function Profile({ navigation }) {
         </View>
 
         <Text style={styles.sectionTitle}>Mi/s Vehiculo/s</Text>
-        {vehiclesData.length === 1 ? (
-          VehicleCard({ item: vehiclesData[0], index: 0 })
-        ) : (
+        {vehiclesData.length > 0 ? (
           <>
             <Carousel
-              data={vehiclesData || []}
-              renderItem={VehicleCard}
+              data={vehiclesData}
+              renderItem={({ item, index }) => (
+                <VehicleCard item={item} index={index} />
+              )}
               width={screenWidth * 0.9}
               height={220}
               mode="left-align"
@@ -124,13 +124,15 @@ function Profile({ navigation }) {
 
             {/* Indicadores de Paginación */}
             <FlatList
-              data={vehiclesData || []}
+              data={vehiclesData}
               renderItem={renderDot}
               keyExtractor={(item, index) => index.toString()}
               horizontal
               contentContainerStyle={styles.paginationContainer}
             />
           </>
+        ) : (
+          <Text>No se encontraron vehículos registrados.</Text> // Mensaje cuando no hay vehículos
         )}
 
         <Text style={styles.sectionTitle}>Tu nivel</Text>

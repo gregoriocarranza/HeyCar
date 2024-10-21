@@ -16,6 +16,7 @@ import { styles, theme } from "./App.Style";
 import * as SecureStore from "expo-secure-store";
 import UserLevelDetails from "./src/pages/Profile/Gamification/UserLevelDetails";
 import RegisterVehicleForm from "./src/Components/RegisterVehicleForm/RegisterVehicleForm";
+import MyCar from "./src/pages/MyCar/MyCar";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -69,6 +70,7 @@ export default function App() {
           >
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="MyCar" component={MyCar} />
             <Stack.Screen
               name="UserLevelDetails"
               options={{ title: "Nivel de usuario", headerShown: true }}

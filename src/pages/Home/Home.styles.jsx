@@ -1,9 +1,6 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  //   vehicleContainer: {
-  //     marginTop: 50,
-  //   },
   noVehicleCard: {
     backgroundColor: "#F5F5F5",
     borderRadius: 16,
@@ -27,13 +24,13 @@ const styles = StyleSheet.create({
     color: "#666666",
     marginTop: 8,
   },
-  addVehicleIcon: {
+  addVehicleIconTouchContainer: {
     width: "100%",
     height: 250,
   },
   addVehicleIconImage: {
     width: "100%",
-    height: "100%",
+    height: 250,
     resizeMode: "contain",
   },
 
@@ -73,16 +70,22 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     marginBottom: 10,
+    flexShrink: 1,
+    width: "80%",
   },
   VehicleText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#333333",
+    flexShrink: 1,
+    flexWrap: "wrap",
+    maxWidth: "80%",
   },
   vehicleInfo: {
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+    marginLeft: 16,
   },
   bellIcon: {
     fontSize: 25,
