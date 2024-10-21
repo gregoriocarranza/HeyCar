@@ -10,7 +10,7 @@
     "splash": {
       "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#00457C"
     },
     "ios": {
       "supportsTablet": true
@@ -18,14 +18,14 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#00457C"
       },
       "package": "com.gregocarranza.HeyCar"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/images/favicon.png"
+      "favicon": "./src/assets/images/icon.png"
     },
     "plugins": [
       "expo-router",

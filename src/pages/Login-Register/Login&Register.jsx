@@ -3,47 +3,55 @@ import { StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 32,
+  },
+
   loginContainer: {
-    width: width * 0.8,
-    padding: 20,
-    borderRadius: 8,
-    shadowColor: "#FDB827",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 5,
-    backgroundColor: "#542583",
-    color: "#FDB827",
+    width: width * 0.9,
+    paddingTop: 20,
+    alignSelf: "center",
+    alignItems: "center",
   },
   imageContainer: {
     alignItems: "center",
     marginBottom: 20,
+  },
+  showHeader: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#000000",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: "400",
+    color: "#6B6B6B",
+    textAlign: "center",
+    marginBottom: 16,
   },
   image: {
     width: 100,
     height: 100,
     borderRadius: 50,
   },
-  heading: {
-    fontSize: height * 0.025,
-    textAlign: "center",
-    marginBottom: height * 0.02,
-    color: "#FDB827",
-  },
   form: {
     flexDirection: "column",
-  },
-  label: {
-    marginBottom: height * 0.01,
-    color: "#FDB827",
+    width: "90%",
   },
   input: {
     padding: height * 0.015,
     marginBottom: height * 0.02,
     borderWidth: 1,
-    borderColor: "#542583",
-    borderRadius: 4,
-    backgroundColor: "#FFF",
+    borderColor: "#B8BBBD",
+    borderRadius: 10,
     color: "#000",
   },
   picker: {
@@ -59,11 +67,50 @@ const styles = StyleSheet.create({
   footerText: {
     marginTop: height * 0.02,
     textAlign: "center",
-    color: "#FDB827",
+    color: "#6C7278",
   },
   link: {
-    color: "#FFF",
-    textDecorationLine: "underline",
+    marginTop: height * 0.02,
+
+    color: "#5DACFF",
+    // textDecorationLine: "underline",
+  },
+  radioContainer: {
+    flexDirection: "row", // Alinea los botones en una fila
+    justifyContent: "space-between", // Distribuye uniformemente los botones
+    alignItems: "center", // Alinea verticalmente los botones
+    marginVertical: 10, // Espacio arriba y abajo del grupo de botones
+  },
+  radioItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  radioLabel: {
+    marginLeft: 5, // Espacio entre el botón y el texto
+    fontSize: 16,
+    color: "#333", // Ajusta el color del texto si es necesario
+  },
+  googleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#DDDDDD",
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  googleIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  googleButtonText: {
+    color: "#000000",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
 

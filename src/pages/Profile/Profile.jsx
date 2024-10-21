@@ -15,6 +15,9 @@ import ScreenLayout from "../../Components/ScreenLayout";
 import * as SecureStore from "expo-secure-store";
 import { useIsFocused } from "@react-navigation/native";
 import VehicleCard from "../../Components/VehicleCard/VehicleCard";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { CommonActions } from "@react-navigation/native";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -33,12 +36,7 @@ function Profile({ navigation }) {
         if (jsonValue) {
           const result = JSON.parse(jsonValue);
           if (result) {
-            const userDatas = {
-              name: "Perfil Generico",
-              image: null,
-              level: "1",
-            };
-            setUserData(userDatas);
+            setUserData({ ...result, image: null, level: "1" });
           }
         }
         const vehiclesJsonValue = await SecureStore.getItemAsync(
@@ -68,6 +66,22 @@ function Profile({ navigation }) {
     loadUser();
   }, [isFocused]);
 
+  const handleLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync("USER_DATA");
+
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Login" }],
+        })
+      );
+    } catch (error) {
+      console.error("Logout failed:", error);
+      Alert.alert("Error", "No se pudo cerrar sesión. Intenta de nuevo.");
+    }
+  };
+
   const renderDot = ({ item, index }) => {
     return (
       <View
@@ -78,6 +92,30 @@ function Profile({ navigation }) {
       />
     );
   };
+  const getIcon = (role) => {
+    switch (role) {
+      case "conductor":
+        return (
+          <MaterialCommunityIcons
+            name="car"
+            size={16}
+            color="#FF6347"
+            style={styles.icon}
+          />
+        );
+      case "mecanico":
+        return (
+          <MaterialCommunityIcons
+            name="wrench"
+            size={16}
+            color="#4682B4"
+            style={styles.icon}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <ScreenLayout showFooter={true} currentRoute={"Profile"}>
@@ -85,24 +123,46 @@ function Profile({ navigation }) {
         contentContainerStyle={styles.profileContainer}
         scrollEnabled={scrollEnabled}
       >
-        {/* Perfil de Usuario */}
         <View style={styles.profileHeader}>
-          <Image
-            source={
-              userData?.image
-                ? { uri: userData?.image }
-                : require("../../assets/user.png")
-            }
-            style={styles.profileImage}
-          />
-          <Text style={styles.profileName}>{userData?.name}</Text>
-          <PaperButton
-            mode="contained"
-            style={styles.editProfileButton}
-            onPress={() => setModalVisible(true)}
-          >
-            Editar perfil
-          </PaperButton>
+          <View style={styles.profileHeaderInfoContainer}>
+            <Image
+              source={
+                userData?.image
+                  ? { uri: userData?.image }
+                  : require("../../assets/user.png")
+              }
+              style={styles.profileImage}
+            />
+            {/* <View style={styles.roleContainer}>
+              <Text style={styles.roleText}>Rol: {userData?.role}</Text>
+              {getIcon(userData?.role)}
+            </View> */}
+          </View>
+
+          <View style={styles.profileHeaderInfoContainer}>
+            <Text style={styles.profileName}>
+              {userData?.name} {userData?.lastname}
+            </Text>
+            <PaperButton
+              mode="contained"
+              style={styles.editProfileButton}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.buttonText}> Editar perfil</Text>
+            </PaperButton>
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={handleLogout}
+            >
+              <Icon
+                name="logout"
+                size={18}
+                color="#FFFFFF"
+                style={styles.icon}
+              />
+              <Text style={styles.buttonText}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Text style={styles.sectionTitle}>Mi/s Vehiculo/s</Text>

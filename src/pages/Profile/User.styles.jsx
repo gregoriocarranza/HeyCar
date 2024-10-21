@@ -7,13 +7,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   profileHeader: {
+    flexDirection: "row",
+    alignSelf: "center",
     alignItems: "center",
     marginBottom: 24,
+    width: screenWidth,
+    justifyContent: "space-evenly",
+  },
+  profileHeaderInfoContainer: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    marginBottom: 24,
+  },
+  roleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 6,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 10,
+  },
+  icon: {
+    marginLeft: 24,
+  },
+  roleText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
   },
   profileImage: {
     width: 100,
     height: 100,
-    borderRadius: 50,
+    borderRadius: 55,
     marginBottom: 16,
   },
   profileName: {
@@ -23,6 +47,23 @@ const styles = StyleSheet.create({
   },
   editProfileButton: {
     backgroundColor: "#007bff",
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FF5733",
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginVertical: 4,
+    borderRadius: 25,
+  },
+  icon: {
+    marginRight: 10, // Espacio entre el ícono y el texto
+  },
+  buttonText: {
+    color: "#FFFFFF", // Color del texto en blanco
+    fontSize: 16,
+    fontWeight: "bold",
   },
   sectionTitle: {
     fontSize: 18,
