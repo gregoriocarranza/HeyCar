@@ -22,6 +22,9 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
+  SecureStore.deleteItemAsync("VEHICLES_DATA");
+  SecureStore.deleteItemAsync("USER_DATA");
+
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
@@ -34,6 +37,7 @@ export default function App() {
         let user = JSON.parse(result);
 
         if (!user) {
+          setIsAuthenticated(false);
           console.error("No user found or access token missing.");
         }
         setIsAuthenticated(true);

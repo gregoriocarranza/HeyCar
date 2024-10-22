@@ -21,9 +21,7 @@ export default function HomeScreen({ navigation }) {
   const [selectedVehicleData, setSelectedVehicleData] = useState({});
   const isFocused = useIsFocused();
   const [refreshing, setRefreshing] = useState(false);
-
-  // <script src="http://localhost:8097"></script>;
-
+  
   useEffect(() => {
     const vehicleFocused = vehiclesData.find(
       (vehicle) => vehicle.name === selectedVehicle
@@ -72,7 +70,7 @@ export default function HomeScreen({ navigation }) {
       >
         <View style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={styles.vehicleContainer}>
-            {vehiclesData.length === 0 ? (
+            {vehiclesData?.length === 0 ? (
               <View style={styles.noVehicleCard}>
                 <Text style={styles.noVehicleText}>
                   No se registró ningún vehículo
@@ -96,16 +94,16 @@ export default function HomeScreen({ navigation }) {
                   <View style={styles.vehicleCardInfoSection}>
                     <RNPickerSelect
                       onValueChange={(value) => setSelectedVehicle(value)}
-                      items={vehiclesData.map((vehicle) => ({
+                      items={vehiclesData?.map((vehicle) => ({
                         label: vehicle.name,
                         value: vehicle.name,
                       }))}
                       value={selectedVehicle}
                     />
                     <Text style={styles.vehicleInfo}>
-                      {selectedVehicleData?.model} -{" "}
-                      {selectedVehicleData?.plate} - {selectedVehicleData?.year}{" "}
-                      - {selectedVehicleData?.km} km
+                      {selectedVehicleData?.model} -{selectedVehicleData?.plate}{" "}
+                      - {selectedVehicleData?.year} - {selectedVehicleData?.km}{" "}
+                      km
                     </Text>
                   </View>
                   <TouchableOpacity
@@ -117,7 +115,7 @@ export default function HomeScreen({ navigation }) {
                 <Image
                   source={
                     selectedVehicleData?.image
-                      ? { uri: selectedVehicleData.image }
+                      ? { uri: selectedVehicleData?.image }
                       : require("../../assets/emptyCar.png")
                   }
                   style={styles.addVehicleIconImage}
