@@ -22,8 +22,8 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-  SecureStore.deleteItemAsync("VEHICLES_DATA");
-  SecureStore.deleteItemAsync("USER_DATA");
+  // SecureStore.deleteItemAsync("VEHICLES_DATA");
+  // SecureStore.deleteItemAsync("USER_DATA");
 
   useEffect(() => {
     const checkAuthentication = async () => {
