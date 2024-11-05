@@ -124,6 +124,27 @@ function Register({ navigation }) {
               Entra aquí
             </Text>
           </Text>
+          <Text style={styles.politicsText}>
+            Al registrarte, aceptas nuestros
+            <Text
+              style={styles.politicsLink}
+              onPress={() => {
+                navigation.navigate("Terms");
+              }}
+            >
+              Términos y Condiciones
+            </Text>
+            y nuestra
+            <Text
+              style={styles.politicsLink}
+              onPress={() => {
+                navigation.navigate("PrivacyPolicy");
+              }}
+            >
+              Política de Privacidad
+            </Text>
+            .
+          </Text>
         </View>
       </ScrollView>
     </ScreenLayout>

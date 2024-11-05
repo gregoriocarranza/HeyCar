@@ -75,20 +75,37 @@ const styles = StyleSheet.create({
     color: "#5DACFF",
     // textDecorationLine: "underline",
   },
+
+  politicsText: {
+    marginTop: height * 0.02,
+    textAlign: "center",
+    color: "#6C7278",
+    fontSize: 14,
+    lineHeight: 20,
+    paddingHorizontal: 20,
+    fontWeight: "500",
+  },
+  politicsLink: {
+    color: "#5DACFF",
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    paddingHorizontal: 5,
+  },
+
   radioContainer: {
-    flexDirection: "row", // Alinea los botones en una fila
-    justifyContent: "space-between", // Distribuye uniformemente los botones
-    alignItems: "center", // Alinea verticalmente los botones
-    marginVertical: 10, // Espacio arriba y abajo del grupo de botones
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 10,
   },
   radioItem: {
     flexDirection: "row",
     alignItems: "center",
   },
   radioLabel: {
-    marginLeft: 5, // Espacio entre el botón y el texto
+    marginLeft: 5,
     fontSize: 16,
-    color: "#333", // Ajusta el color del texto si es necesario
+    color: "#333",
   },
   googleButton: {
     flexDirection: "row",

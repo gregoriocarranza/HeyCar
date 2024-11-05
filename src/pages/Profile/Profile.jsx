@@ -68,7 +68,9 @@ function Profile({ navigation }) {
 
   const handleLogout = async () => {
     try {
-      await SecureStore.deleteItemAsync("USER_DATA");
+      
+      SecureStore.deleteItemAsync("VEHICLES_DATA");
+      SecureStore.deleteItemAsync("USER_DATA");
 
       navigation.dispatch(
         CommonActions.reset({

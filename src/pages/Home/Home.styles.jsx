@@ -34,17 +34,55 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 
+  sectionview: {
+    marginVertical: 16,
+  },
   sectionTitle: {
-    marginTop: 20,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#1F4A83",
   },
+  showMore: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#1F4A83",
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
+  },
   sectionDivider: {
+    marginVertical: 10,
     height: 1,
     backgroundColor: "#CCCCCC",
     marginVertical: 8,
     width: "100%",
+  },
+  specificationCard: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  specTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333333",
+  },
+  specInfo: {
+    paddingVertical: 16,
+    flexDirection: "row",
+  },
+  specValue: {
+    fontSize: 14,
+    color: "#666666",
+    marginTop: 4,
   },
 
   //with vehicle

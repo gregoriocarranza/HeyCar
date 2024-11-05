@@ -51,7 +51,17 @@ function RegisterVehicleForm({ navigation }) {
       }
 
       // Agregar el nuevo vehículo al arreglo de vehículos
-      vehicles.push(vehicleData);
+      vehicles.push({
+        ...vehicleData,
+        specifications: [
+          { name: "Kilometrje", value: vehicleData.km, unity: "Km" },
+          { name: "Velocidad", value: 0, unity: "Km" },
+          { name: "RPM", value: 0, unity: "rpm" },
+        ],
+        adv: [
+          { name: "Pastillas de frenos delanteros", value: "Cambio inminente" },
+        ],
+      });
 
       // Guardar los datos actualizados de vehículos en el almacenamiento seguro
       await SecureStore.setItemAsync("VEHICLES_DATA", JSON.stringify(vehicles));
