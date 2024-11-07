@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { TextInput, Button, RadioButton } from "react-native-paper";
 import styles from "./RegisterVehicleForm.styles";
-import * as SecureStore from "expo-secure-store";
+import { useDispatch, useSelector } from "react-redux";
+import { registerVehicle } from "../../app/Features/Vehicles/VehiclesAction";
 
 function RegisterVehicleForm({ navigation }) {
+  const dispatch = useDispatch();
+  const { vehicles, loading, error } = useSelector((state) => state.vehicles);
+
   const [vehicleData, setVehicleData] = useState({
-    name: "",
+    vehicle_name: "",
+    brand: "",
     model: "",
-    type: "Camioneta",
-    plate: "",
+    vehicle_type: "Truck",
+    license_plate: "",
     year: "",
     km: "",
     image: null,
@@ -26,48 +31,36 @@ function RegisterVehicleForm({ navigation }) {
     try {
       // Validación: Verificar que todos los campos estén completos
       if (
-        !vehicleData.name ||
+        !vehicleData.vehicle_name ||
+        !vehicleData.brand ||
         !vehicleData.model ||
-        !vehicleData.type ||
-        !vehicleData.plate ||
+        !vehicleData.vehicle_type ||
+        !vehicleData.license_plate ||
         !vehicleData.year ||
         !vehicleData.km
       ) {
-        console.error("Todos los campos son requeridos");
+        Alert.alert("Todos los campos son requeridos");
         return;
       }
-
-      const vehiclesJsonValue = await SecureStore.getItemAsync("VEHICLES_DATA");
-
-      let vehicles = [];
-      if (vehiclesJsonValue) {
-        vehicles = JSON.parse(vehiclesJsonValue);
-        if (!Array.isArray(vehicles)) {
-          console.error(
-            "Error: Los datos de vehículos no están en un formato de arreglo"
-          );
-          vehicles = [];
-        }
-      }
-
-      // Agregar el nuevo vehículo al arreglo de vehículos
-      vehicles.push({
-        ...vehicleData,
-        specifications: [
-          { name: "Kilometrje", value: vehicleData.km, unity: "Km" },
-          { name: "Velocidad", value: 0, unity: "Km" },
-          { name: "RPM", value: 0, unity: "rpm" },
-        ],
-        adv: [
-          { name: "Pastillas de frenos delanteros", value: "Cambio inminente" },
-        ],
-      });
-
-      // Guardar los datos actualizados de vehículos en el almacenamiento seguro
-      await SecureStore.setItemAsync("VEHICLES_DATA", JSON.stringify(vehicles));
-
-      // console.log("Registro del vehículo:", vehicleData);
-      navigation.goBack();
+      dispatch(registerVehicle(vehicleData))
+        .unwrap()
+        .then((result) => {
+          setVehicleData({
+            name: "",
+            brand: "",
+            model: "",
+            vehicle_type: "Truck",
+            license_plate: "",
+            year: "",
+            km: "",
+            image: null,
+          });
+          Alert.alert("Éxito", "Registraste el auto correctamente");
+          navigation.goBack();
+        })
+        .catch((error) => {
+          console.error("Register failed:", error);
+        });
     } catch (error) {
       console.error("Error al registrar el vehículo:", error);
     }
@@ -81,8 +74,15 @@ function RegisterVehicleForm({ navigation }) {
       {/* Campos del formulario */}
       <TextInput
         label="Nombre del vehículo"
-        value={vehicleData.name}
-        onChangeText={(text) => handleChange("name", text)}
+        value={vehicleData.vehicle_name}
+        onChangeText={(text) => handleChange("vehicle_name", text)}
+        style={styles.input}
+        mode="outlined"
+      />
+      <TextInput
+        label="Marca"
+        value={vehicleData.brand}
+        onChangeText={(text) => handleChange("brand", text)}
         style={styles.input}
         mode="outlined"
       />
@@ -96,24 +96,23 @@ function RegisterVehicleForm({ navigation }) {
 
       {/* Opciones de tipo de vehículo */}
       <RadioButton.Group
-        onValueChange={(newValue) => handleChange("type", newValue)}
-        value={vehicleData.type}
+        onValueChange={(newValue) => handleChange("vehicle_type", newValue)}
+        value={vehicleData.vehicle_type}
       >
         <View style={styles.radioButtonRow}>
-          <RadioButton value="Camioneta" />
+          <RadioButton value="Truck" />
           <Text style={styles.radioLabel}>Camioneta</Text>
-          <RadioButton value="Auto" />
+          <RadioButton value="Car" />
           <Text style={styles.radioLabel}>Auto</Text>
-          <RadioButton value="Otro" />
+          <RadioButton value="Other" />
           <Text style={styles.radioLabel}>Otro</Text>
         </View>
       </RadioButton.Group>
 
-      {/* Otros Campos */}
       <TextInput
         label="Patente"
-        value={vehicleData.plate}
-        onChangeText={(text) => handleChange("plate", text)}
+        value={vehicleData.license_plate}
+        onChangeText={(text) => handleChange("license_plate", text)}
         style={styles.input}
         mode="outlined"
       />
@@ -133,15 +132,14 @@ function RegisterVehicleForm({ navigation }) {
         mode="outlined"
         keyboardType="numeric"
       />
-      <TextInput
+      {/* <TextInput
         label="Imagen para el vehiculo"
         value={vehicleData.image}
         onChangeText={(text) => handleChange("image", text)}
         style={styles.input}
         mode="outlined"
-      />
+      /> */}
 
-      {/* Botones */}
       <Button
         mode="contained"
         onPress={handleSubmit}

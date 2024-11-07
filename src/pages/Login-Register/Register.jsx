@@ -12,25 +12,55 @@ import { RadioButton } from "react-native-paper";
 import styles from "./Login&Register";
 import ScreenLayout from "../../Components/ScreenLayout";
 import LogoTipo from "@/src/assets/images/HeyCarTitle.svg";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../../app/Features/User/UserAction";
 const { width } = Dimensions.get("window");
 
 function Register({ navigation }) {
+  const dispatch = useDispatch();
+  // const [formData, setFormData] = useState({
+  //   firstname: "",
+  //   lastName: "",
+  //   email: "",
+  //   password: "",
+  //   confirmPassword: "",
+  //   role: "",
+  // });
   const [formData, setFormData] = useState({
-    firstname: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    firstname: "Gregorio",
+    lastName: "Carranza Torres",
+    email: "Gregoriocarranzatorres@gmail.com",
+    password: "aws",
+    confirmPassword: "aws",
     role: "",
   });
-
   const handleSubmit = async () => {
     const { password, confirmPassword } = formData;
     if (password !== confirmPassword) {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
-    navigation.navigate("Login");
+    dispatch(
+      registerUser({
+        name: `${formData.firstname} ${formData.lastName}`,
+        email: formData.email,
+        password: formData.password,
+      })
+    )
+      .unwrap()
+      .then((result) => {
+        setFormData({
+          firstname: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        Alert.alert("Éxito", "Te registraste correctamente");
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        console.error("Register failed:", error);
+      });
   };
 
   return (

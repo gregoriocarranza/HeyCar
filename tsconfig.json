@@ -13,6 +13,7 @@
     "expo-env.d.ts",
     "src/pages/Register/Register.jsx",
     "src/pages/Login-Register/Login.jsx",
-    "src/pages/Home/Home.jsx"
+    "src/pages/Home/Home.jsx",
+    "src/utils/VehicleStatus.jsx"
   ]
 }

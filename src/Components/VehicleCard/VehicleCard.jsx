@@ -19,9 +19,12 @@ const VehicleCard = ({ item, index }) => {
       />
       <Card.Actions style={styles.vehicleCardActions}>
         <View style={styles.vehicleCardInfoSection}>
-          <Text style={styles.vehicleName}>{item.name}</Text>
+          <Text style={styles.vehicleName}>
+            {item?.vehicle_name || `${item.brand} ${item.model}`}
+          </Text>
           <Text style={styles.vehicleInfo}>
-            {item.model} - {item.plate} - {item.year} - {item.km} km
+            {item.brand} - {item.model} - {item.license_plate} - {item.year} -{" "}
+            {item.km} km
           </Text>
         </View>
         <IconButton

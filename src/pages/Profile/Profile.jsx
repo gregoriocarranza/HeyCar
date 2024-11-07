@@ -18,13 +18,20 @@ import VehicleCard from "../../Components/VehicleCard/VehicleCard";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { CommonActions } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getVehicles } from "../../app/Features/Vehicles/VehiclesAction";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 function Profile({ navigation }) {
+  const dispatch = useDispatch();
+  const {
+    vehicles: vehiclesData,
+    loading,
+    error,
+  } = useSelector((state) => state.vehicles);
   const [modalVisible, setModalVisible] = useState(false);
   const [userData, setUserData] = useState({});
-  const [vehiclesData, setVehiclesData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const isFocused = useIsFocused();
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -37,25 +44,7 @@ function Profile({ navigation }) {
           const result = JSON.parse(jsonValue);
           if (result) {
             setUserData({ ...result, image: null, level: "1" });
-          }
-        }
-        const vehiclesJsonValue = await SecureStore.getItemAsync(
-          "VEHICLES_DATA"
-        );
-        if (vehiclesJsonValue) {
-          const vehiclesresult = JSON.parse(vehiclesJsonValue);
-          if (vehiclesresult) {
-            // const vehicles = [
-            //   {
-            //     name: "Vehiculo-2",
-            //     model: "BMW X5",
-            //     plate: "XYZ789",
-            //     year: 2021,
-            //     km: 30000,
-            //     image: "https://via.placeholder.com/300",
-            //   },
-            // ];
-            setVehiclesData(vehiclesresult);
+            dispatch(getVehicles());
           }
         }
       } catch (error) {
@@ -68,10 +57,8 @@ function Profile({ navigation }) {
 
   const handleLogout = async () => {
     try {
-      
-      SecureStore.deleteItemAsync("VEHICLES_DATA");
       SecureStore.deleteItemAsync("USER_DATA");
-
+      SecureStore.deleteItemAsync("NOTIFICATION_DATA");
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -142,9 +129,7 @@ function Profile({ navigation }) {
           </View>
 
           <View style={styles.profileHeaderInfoContainer}>
-            <Text style={styles.profileName}>
-              {userData?.name} {userData?.lastname}
-            </Text>
+            <Text style={styles.profileName}>{userData?.name}</Text>
             <PaperButton
               mode="contained"
               style={styles.editProfileButton}
