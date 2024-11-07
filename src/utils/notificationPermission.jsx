@@ -1,6 +1,8 @@
 import * as Notifications from "expo-notifications";
 
-export default async function registerForPushNotificationsAsync() {
+export default async function registerForPushNotificationsAsync(
+  tokenType = process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER
+) {
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
 
@@ -14,9 +16,9 @@ export default async function registerForPushNotificationsAsync() {
     return;
   }
 
-  if (process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER === "EXPO") {
+  if (tokenType === "EXPO") {
     token = (await Notifications.getExpoPushTokenAsync()).data;
-  } else if (process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER === "FCM") {
+  } else if (tokenType === "FCM") {
     token = (await Notifications.getDevicePushTokenAsync()).data;
   } else {
     throw new Error(
@@ -24,10 +26,7 @@ export default async function registerForPushNotificationsAsync() {
     );
   }
 
-  // console.log(
-  //   `Token para ${process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER}:`,
-  //   token
-  // );
+  console.log(`Token para ${tokenType}:`, token);
 
-  return { token, type: process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER };
+  return { token, type: tokenType };
 }

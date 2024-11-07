@@ -7,7 +7,7 @@
     "start:ngrok": "npx expo start -c --tunnel",
     "android": "npx expo run:android",
     "ios": "npx expo run:ios",
-    "build:dev": "eas build --profile development --platform android",
+    "build:dev": "eas build --profile development --platform android --clear-cache",
     "build:prod": "eas build --platform android",
     "reset-project": "node ./scripts/reset-project.js",
     "web": "expo start --web",
