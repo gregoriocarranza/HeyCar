@@ -109,27 +109,31 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     if (isMounted) {
-      console.log("ejecutando el cambio de token por variable");
+      try {
+        console.log("ejecutando el cambio de token por variable");
 
-      const changeType = async () => {
-        const data = await registerForPushNotificationsAsync(tokenType);
-        dispatch(saveNotification(data))
-          .then(async (result) => {
-            SecureStore.setItem(
-              "NOTIFICATION_DATA",
-              JSON.stringify({
-                notification_token: result.payload.notification_token,
-                notification_type: result.payload.notification_type,
-              })
-            );
+        const changeType = async () => {
+          const data = await registerForPushNotificationsAsync(tokenType);
+          dispatch(saveNotification(data))
+            .then(async (result) => {
+              SecureStore.setItem(
+                "NOTIFICATION_DATA",
+                JSON.stringify({
+                  notification_token: result.payload.notification_token,
+                  notification_type: result.payload.notification_type,
+                })
+              );
 
-            console.log("notification token saved");
-          })
-          .catch((error) => {
-            console.error("Notification persisting error:", error);
-          });
-      };
-      changeType();
+              console.log("notification token saved");
+            })
+            .catch((error) => {
+              console.error("Notification persisting error:", error);
+            });
+        };
+        changeType();
+      } catch (error) {
+        console.error("Notification error:", error);
+      }
     } else {
       setIsMounted(true);
     }
