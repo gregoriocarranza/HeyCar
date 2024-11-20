@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, Modal, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "./AddFailureModal.style";
 
 export default function AddFailureModal({ visible, onClose, onSubmit }) {
@@ -7,6 +15,8 @@ export default function AddFailureModal({ visible, onClose, onSubmit }) {
   const [part, setPart] = useState("");
   const [description, setDescription] = useState("");
   const [mileage, setMileage] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleSubmit = () => {
     const errors = [];
@@ -24,12 +34,20 @@ export default function AddFailureModal({ visible, onClose, onSubmit }) {
       title,
       part,
       description,
-      km: parseInt(mileage, 10), // Convertir el kilometraje a número
+      date: date.toISOString().split("T")[0], // Formatear fecha como "YYYY-MM-DD"
+      km: parseInt(mileage, 10),
       report_type: "manual",
     };
 
     onSubmit(failureData);
     onClose();
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
   };
 
   return (
@@ -62,6 +80,23 @@ export default function AddFailureModal({ visible, onClose, onSubmit }) {
             onChangeText={setDescription}
             multiline={true}
           />
+
+          <Text style={styles.label}>Fecha</Text>
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text>{date.toISOString().split("T")[0]}</Text>
+          </TouchableOpacity>
+
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === "ios" ? "inline" : "default"}
+              onChange={handleDateChange}
+            />
+          )}
 
           <Text style={styles.label}>Kilometraje*</Text>
           <TextInput
