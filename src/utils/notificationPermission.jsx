@@ -34,7 +34,11 @@ export default async function registerForPushNotificationsAsync(
     // Obtener el token según el tipo seleccionado
     let token;
     if (tokenType === "EXPO") {
-      token = (await Notifications.getExpoPushTokenAsync(projectId)).data;
+      token = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data;
     } else if (tokenType === "FCM") {
       token = (await Notifications.getDevicePushTokenAsync()).data;
     } else {
@@ -44,13 +48,16 @@ export default async function registerForPushNotificationsAsync(
     }
 
     // Muestra el token en una alerta
-    Alert.alert(
-      "Token de Notificación",
-      `Token para ${tokenType}: ${token},\n\n ProjectID:${projectId}`
-    );
+    // Alert.alert(
+    //   "Token de Notificación",
+    //   `Token para ${tokenType}: ${token},\n\n ProjectID:${projectId}`
+    // );
 
     return { token, type: tokenType };
   } catch (error) {
+    const projectId =
+      process.env.EXPO_PUBLIC_PROJECT_ID ||
+      Constants?.expoConfig?.extra?.eas?.projectId;
     Alert.alert(
       "Error",
       `Error al obtener el token: ${error.message}\n\nToken type: ${tokenType},\n\n ProjectID:${projectId}`

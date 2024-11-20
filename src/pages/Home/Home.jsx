@@ -36,20 +36,6 @@ export default function HomeScreen({ navigation }) {
 
   // Sentry.captureMessage("Cargando home");
 
-  useEffect(() => {
-    try {
-      if (selectedVehicle != "") {
-        const vehicleFocused =
-          vehiclesData.find((vehicle) => vehicle?.id === selectedVehicle) || {};
-        const statusChecked = vehicleStatusChecker(vehicleFocused);
-        setSelectedVehicleData({ ...vehicleFocused, statusChecked });
-      }
-    } catch (error) {
-      // Sentry.captureException("Error filtering the selected vehicle:", error);
-      console.error("Error filtering the selected vehicle:", error);
-    }
-  }, [selectedVehicle]);
-
   const loadUser = async () => {
     setRefreshing(true);
     try {
@@ -155,9 +141,19 @@ export default function HomeScreen({ navigation }) {
                   <View style={styles.VehicleCardHeader}>
                     <View style={styles.vehicleCardInfoSection}>
                       <RNPickerSelect
-                        onValueChange={(value, index) =>
-                          setSelectedVehicle(index)
-                        }
+                        onValueChange={(value) => {
+                          const selectedVehicle = vehiclesData.find(
+                            (vehicle) =>
+                              value === vehicle?.vehicle_name ||
+                              value === `${vehicle?.brand} ${vehicle?.model}`
+                          );
+
+                          const statusChecked =
+                            vehicleStatusChecker(selectedVehicle);
+                          setSelectedVehicleData(
+                            { ...selectedVehicle, statusChecked } || {}
+                          );
+                        }}
                         items={vehiclesData?.map((vehicle) => ({
                           label:
                             vehicle.vehicle_name ||

@@ -44,6 +44,7 @@ export default function HistorialDeReparaciones() {
 
   useEffect(() => {
     const loadHistory = async () => {
+      if (!selectedVehicleData) return;
       setRefreshing(true);
       try {
         const jsonValue = await SecureStore.getItemAsync("USER_DATA");
