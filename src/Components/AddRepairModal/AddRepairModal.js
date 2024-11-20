@@ -9,27 +9,28 @@ import {
 } from "react-native";
 import styles from "./AddRepairModal.style";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSelector } from "react-redux";
+import RNPickerSelect from "react-native-picker-select";
 
 export default function AddRepairModal({ visible, onClose, onSubmit }) {
-  const [components, setComponents] = useState("");
+  const [part, setPart] = useState("");
   const [description, setDescription] = useState("");
-  const [repairType, setRepairType] = useState("");
-  const [mechanicName, setMechanicName] = useState("");
-  const [locationAddress, setLocationAddress] = useState("");
-  const [repairCost, setRepairCost] = useState("");
-
+  const [repairType, setRepairType] = useState("repair");
+  const [cost, setCost] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedVehicleData, setSelectedVehicleData] = useState({});
+  const { vehicles, vehicleHistory, loading, error } = useSelector(
+    (state) => state.vehicles
+  );
 
   const handleSubmit = () => {
     const errors = [];
-    if (!components) errors.push("Componentes revisados");
+    if (!part) errors.push("Componente");
     if (!description) errors.push("Descripción");
     if (!date) errors.push("Fecha");
-    if (!repairType) errors.push("Tipo de informe");
-    if (!mechanicName) errors.push("Nombre del mecánico");
-    if (!locationAddress) errors.push("Dirección del local");
-    if (!repairCost) errors.push("Total de la reparación");
+    if (!cost) errors.push("Costo");
+    if (!selectedVehicleData.id) errors.push("Vehículo");
 
     if (errors.length > 0) {
       alert(`Por favor, completa los siguientes campos: ${errors.join(", ")}`);
@@ -37,13 +38,12 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
     }
 
     const repairData = {
-      components,
+      date: date.toISOString(), // Fecha en formato ISO 8601
+      part,
       description,
-      date,
-      repairType,
-      mechanicName,
-      locationAddress,
-      repairCost: parseFloat(repairCost),
+      cost: parseFloat(cost), // Convertir a número
+      repair_vehicle_id: selectedVehicleData.id,
+      type: repairType,
     };
 
     onSubmit(repairData);
@@ -62,13 +62,46 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Crear informe de reparación</Text>
-
-          <Text style={styles.label}>Componentes revisados*</Text>
+          <RNPickerSelect
+            onValueChange={(value) => {
+              const selectedVehicle = vehicles.find(
+                (vehicle) =>
+                  value === vehicle?.vehicle_name ||
+                  value === `${vehicle?.brand} ${vehicle?.model}`
+              );
+              setSelectedVehicleData(selectedVehicle || {});
+            }}
+            items={
+              vehicles?.length > 0
+                ? vehicles.map((vehicle) => ({
+                    label:
+                      vehicle?.vehicle_name ||
+                      `${vehicle?.brand} ${vehicle?.model}`,
+                    value:
+                      vehicle?.vehicle_name ||
+                      `${vehicle?.brand} ${vehicle?.model}`,
+                  }))
+                : [{ label: "No hay vehículos disponibles", value: null }]
+            }
+            value={
+              selectedVehicleData?.vehicle_name ||
+              `${selectedVehicleData?.brand} ${selectedVehicleData?.model}`
+            }
+            style={{
+              inputAndroid: styles.pickerInput,
+              inputIOS: styles.pickerInput,
+            }}
+            placeholder={{
+              label: "Selecciona un vehículo",
+              value: null,
+            }}
+          />
+          <Text style={styles.label}>Componente*</Text>
           <TextInput
             style={styles.input}
             placeholder="Motor"
-            value={components}
-            onChangeText={setComponents}
+            value={part}
+            onChangeText={setPart}
           />
 
           <Text style={styles.label}>Descripción*</Text>
@@ -90,7 +123,6 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
                 <Text>{date.toISOString().split("T")[0]}</Text>
               </TouchableOpacity>
             </View>
-
             {showDatePicker && (
               <DateTimePicker
                 value={date}
@@ -99,39 +131,14 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
                 onChange={handleDateChange}
               />
             )}
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Tipo de informe*</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Reparación"
-                value={repairType}
-                onChangeText={setRepairType}
-              />
-            </View>
           </View>
 
-          <Text style={styles.label}>Nombre del mecánico*</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Gustavo"
-            value={mechanicName}
-            onChangeText={setMechanicName}
-          />
-
-          <Text style={styles.label}>Dirección del local*</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Lima 123"
-            value={locationAddress}
-            onChangeText={setLocationAddress}
-          />
-
-          <Text style={styles.label}>Total de la reparación*</Text>
+          <Text style={styles.label}>Costo de la reparación*</Text>
           <TextInput
             style={styles.input}
             placeholder="$477.364"
-            value={repairCost}
-            onChangeText={setRepairCost}
+            value={cost}
+            onChangeText={setCost}
             keyboardType="numeric"
           />
 
