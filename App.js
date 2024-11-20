@@ -23,6 +23,7 @@ import PrivacyPolicyScreen from "./src/pages/terminos-politicas/PrivacyPolicyScr
 import TermsAndConditionsScreen from "./src/pages/terminos-politicas/TermsAndConditionsScreen";
 import * as Notifications from "expo-notifications";
 import HistorialFallos from "./src/pages/MyCar/HistorialFallos/HistorialFallos";
+import HistorialDeReparaciones from "./src/pages/MyCar/HistorialDeReparaciones/HistorialDeReparaciones";
 
 const Stack = createNativeStackNavigator();
 
@@ -119,6 +120,14 @@ function App() {
                 name="FailureHistory"
                 options={{ title: "Historial de fallos", headerShown: true }}
                 component={HistorialFallos}
+              />
+              <Stack.Screen
+                name="RepairHistory"
+                options={{
+                  title: "Historial de reparaciónes",
+                  headerShown: true,
+                }}
+                component={HistorialDeReparaciones}
               />
               <Stack.Screen
                 name="UserLevelDetails"

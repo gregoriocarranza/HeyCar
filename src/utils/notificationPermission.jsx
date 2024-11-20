@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import { Alert } from "react-native";
 
 export default async function registerForPushNotificationsAsync(
-  tokenType = process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER
+  tokenType = process.env.EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER || "EXPO"
 ) {
   try {
     const projectId =
@@ -42,7 +42,10 @@ export default async function registerForPushNotificationsAsync(
     }
 
     // Muestra el token en una alerta
-    // Alert.alert("Token de Notificación", `Token para ${tokenType}: ${token}`);
+    Alert.alert(
+      "Token de Notificación",
+      `Token para ${tokenType}: ${token},\n\n ProjectID:${projectId}`
+    );
 
     return { token, type: tokenType };
   } catch (error) {

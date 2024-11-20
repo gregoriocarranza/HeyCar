@@ -9,6 +9,7 @@ import {
 const initialState = {
   vehicles: [],
   vehicleHistory: [],
+  vehicleRepairHistory: [],
   vehicle: null,
   loading: false,
   error: false,
