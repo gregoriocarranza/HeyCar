@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getVehicles,
   getVehiclesFailureHistory,
+  getVehiclesRepairHistory,
   postVehiclesFailureHistory,
+  postVehiclesRepairHistory,
   registerVehicle,
 } from "./VehiclesAction";
 
@@ -66,6 +68,30 @@ const vehiclesSlice = createSlice({
         state.loading = false;
       })
       .addCase(postVehiclesFailureHistory.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(getVehiclesRepairHistory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getVehiclesRepairHistory.fulfilled, (state, action) => {
+        state.vehicleRepairHistory = action.payload;
+        state.loading = false;
+      })
+      .addCase(getVehiclesRepairHistory.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(postVehiclesRepairHistory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(postVehiclesRepairHistory.fulfilled, (state, action) => {
+        state.vehicleRepairHistory.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(postVehiclesRepairHistory.rejected, (state, action) => {
         state.errorMessage = action.payload;
         state.error = true;
         state.loading = false;

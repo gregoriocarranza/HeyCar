@@ -16,10 +16,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getVehicles,
+  getVehiclesRepairHistory,
   postVehiclesRepairHistory,
 } from "../../../app/Features/Vehicles/VehiclesAction";
 import * as SecureStore from "expo-secure-store";
+import RNPickerSelect from "react-native-picker-select";
 
 export default function HistorialDeReparaciones() {
   const [startDate, setStartDate] = useState("");
@@ -31,61 +32,41 @@ export default function HistorialDeReparaciones() {
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
+  const [selectedVehicleData, setSelectedVehicleData] = useState({});
+
   const isFocused = useIsFocused();
   const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch();
-  const {
-    vehicles: vehiclesData,
-    vehicleRepairHistory,
-    loading,
-    error,
-  } = useSelector((state) => state.vehicles);
+  const { vehicles, vehicleRepairHistory, loading, error } = useSelector(
+    (state) => state.vehicles
+  );
 
-  const repairData = [
-    {
-      id: "1",
-      workshop: "Taller Lima 123",
-      mechanic: "Gustavo",
-      date: "8/10/2024",
-      type: "Mantenimiento",
-    },
-    {
-      id: "2",
-      workshop: "Taller Lima 123",
-      mechanic: "Tamara",
-      date: "8/10/2024",
-      type: "Reparación",
-    },
-  ];
-
-  // useEffect(() => {
-  //   const loadUser = async () => {
-  //     setRefreshing(true);
-  //     try {
-  //       const jsonValue = await SecureStore.getItemAsync("USER_DATA");
-  //       if (jsonValue) {
-  // dispatch(postVehiclesRepairHistory())
-  //           .then((result) => {
-  //             if (vehiclesData?.length < 0) {
-  //               console.info("No hay vehiculos");
-
-  //               return;
-  //             }
-  //             setSelectedVehicleData(vehiclesData[0]);
-  //           })
-  //           .catch((error) => {
-  //             console.error("Register failed:", error);
-  //           });
-  //       }
-  //     } catch (error) {
-  //       console.error("Error loading user data:", error);
-  //     } finally {
-  //       setRefreshing(false);
-  //     }
-  //   };
-  //   loadUser();
-  // }, [isFocused]);
+  useEffect(() => {
+    const loadHistory = async () => {
+      setRefreshing(true);
+      try {
+        const jsonValue = await SecureStore.getItemAsync("USER_DATA");
+        if (jsonValue) {
+          dispatch(getVehiclesRepairHistory(selectedVehicleData.id))
+            .then((result) => {
+              if (vehicleRepairHistory?.length < 0) {
+                console.info("No hay info de vehiculos");
+                return;
+              }
+            })
+            .catch((error) => {
+              console.error("Register failed:", error);
+            });
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      } finally {
+        setRefreshing(false);
+      }
+    };
+    loadHistory();
+  }, [selectedVehicleData]);
 
   const handleDateChange = (type, selectedDate) => {
     if (!selectedDate) {
@@ -93,8 +74,6 @@ export default function HistorialDeReparaciones() {
       setShowStartDatePicker(false);
       return;
     }
-
-    console.log(selectedDate, type);
     const formattedDate = selectedDate.toISOString().split("T")[0];
     switch (type) {
       case "startDate":
@@ -112,13 +91,18 @@ export default function HistorialDeReparaciones() {
   };
 
   const handleAddRepair = (repairData) => {
-    console.log("Nueva reparacion registrada:", repairData);
-    // dispatch(postVehiclesRepairHistory(repairData));
+    // console.log("Nueva reparacion registrada:", repairData);
+    dispatch(
+      postVehiclesRepairHistory({
+        ...repairData,
+        repair_vehicle_id: selectedVehicleData.id,
+      })
+    );
   };
 
   const renderRepair = ({ item }) => (
     <View style={styles.repairCard}>
-      <Text style={styles.repairTitle}>{item.workshop}</Text>
+      <Text style={styles.repairTitle}>{item?.workshop || item?.part}</Text>
       <Text style={styles.repairDetail}>Mecánico: {item.mechanic}</Text>
       <Text style={styles.repairDetail}>{item.date}</Text>
       <Text style={styles.repairType}>{item.type}</Text>
@@ -186,9 +170,42 @@ export default function HistorialDeReparaciones() {
             onChangeText={setService}
           />
         </View>
-
+        <RNPickerSelect
+          onValueChange={(value) => {
+            const selectedVehicle = vehicles.find(
+              (vehicle) =>
+                value === vehicle?.vehicle_name ||
+                value === `${vehicle?.brand} ${vehicle?.model}`
+            );
+            setSelectedVehicleData(selectedVehicle || {});
+          }}
+          items={
+            vehicles?.length > 0
+              ? vehicles.map((vehicle) => ({
+                  label:
+                    vehicle?.vehicle_name ||
+                    `${vehicle?.brand} ${vehicle?.model}`,
+                  value:
+                    vehicle?.vehicle_name ||
+                    `${vehicle?.brand} ${vehicle?.model}`,
+                }))
+              : [{ label: "No hay vehículos disponibles", value: null }]
+          }
+          value={
+            selectedVehicleData?.vehicle_name ||
+            `${selectedVehicleData?.brand} ${selectedVehicleData?.model}`
+          }
+          style={{
+            inputAndroid: styles.pickerInput,
+            inputIOS: styles.pickerInput,
+          }}
+          placeholder={{
+            label: "Selecciona un vehículo",
+            value: null,
+          }}
+        />
         <FlatList
-          data={repairData}
+          data={vehicleRepairHistory}
           keyExtractor={(item) => item.id}
           renderItem={renderRepair}
           contentContainerStyle={styles.listContainer}

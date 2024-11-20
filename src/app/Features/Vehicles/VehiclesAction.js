@@ -126,7 +126,7 @@ export const getVehiclesRepairHistory = createAsyncThunk(
       user = await getAccesTokenVerified();
 
       const response = await fetch(
-        `${EXPO_PUBLIC_API_URL}/vehicles/${vehicle_id}/failures`,
+        `${EXPO_PUBLIC_API_URL}/repairs/${vehicle_id}`,
         {
           method: "GET",
           headers: {
@@ -166,7 +166,7 @@ export const postVehiclesRepairHistory = createAsyncThunk(
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message);
+        throw new Error("response.ok", data.message);
       }
       const data = await response.json();
       return data;

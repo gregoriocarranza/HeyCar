@@ -9,8 +9,6 @@ import {
 } from "react-native";
 import styles from "./AddRepairModal.style";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useSelector } from "react-redux";
-import RNPickerSelect from "react-native-picker-select";
 
 export default function AddRepairModal({ visible, onClose, onSubmit }) {
   const [part, setPart] = useState("");
@@ -19,10 +17,6 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
   const [cost, setCost] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedVehicleData, setSelectedVehicleData] = useState({});
-  const { vehicles, vehicleHistory, loading, error } = useSelector(
-    (state) => state.vehicles
-  );
 
   const handleSubmit = () => {
     const errors = [];
@@ -30,7 +24,6 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
     if (!description) errors.push("Descripción");
     if (!date) errors.push("Fecha");
     if (!cost) errors.push("Costo");
-    if (!selectedVehicleData.id) errors.push("Vehículo");
 
     if (errors.length > 0) {
       alert(`Por favor, completa los siguientes campos: ${errors.join(", ")}`);
@@ -42,7 +35,6 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
       part,
       description,
       cost: parseFloat(cost), // Convertir a número
-      repair_vehicle_id: selectedVehicleData.id,
       type: repairType,
     };
 
@@ -62,40 +54,7 @@ export default function AddRepairModal({ visible, onClose, onSubmit }) {
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Crear informe de reparación</Text>
-          <RNPickerSelect
-            onValueChange={(value) => {
-              const selectedVehicle = vehicles.find(
-                (vehicle) =>
-                  value === vehicle?.vehicle_name ||
-                  value === `${vehicle?.brand} ${vehicle?.model}`
-              );
-              setSelectedVehicleData(selectedVehicle || {});
-            }}
-            items={
-              vehicles?.length > 0
-                ? vehicles.map((vehicle) => ({
-                    label:
-                      vehicle?.vehicle_name ||
-                      `${vehicle?.brand} ${vehicle?.model}`,
-                    value:
-                      vehicle?.vehicle_name ||
-                      `${vehicle?.brand} ${vehicle?.model}`,
-                  }))
-                : [{ label: "No hay vehículos disponibles", value: null }]
-            }
-            value={
-              selectedVehicleData?.vehicle_name ||
-              `${selectedVehicleData?.brand} ${selectedVehicleData?.model}`
-            }
-            style={{
-              inputAndroid: styles.pickerInput,
-              inputIOS: styles.pickerInput,
-            }}
-            placeholder={{
-              label: "Selecciona un vehículo",
-              value: null,
-            }}
-          />
+
           <Text style={styles.label}>Componente*</Text>
           <TextInput
             style={styles.input}
