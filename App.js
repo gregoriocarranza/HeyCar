@@ -35,17 +35,18 @@ Notifications.setNotificationHandler({
 });
 
 function App() {
-  const [notification, setNotification] = useState(false);
+  const [notification, setNotification] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-        console.log("Notification received in foreground:", notification);
+        if (notification) {
+          setNotification(notification);
+          console.log("Notification received in foreground:", notification);
+        }
       });
 
     responseListener.current =
@@ -54,8 +55,10 @@ function App() {
       });
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-      Notifications.removeNotificationSubscription(responseListener);
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
@@ -113,7 +116,7 @@ function App() {
               <Stack.Screen name="Profile" component={Profile} />
               <Stack.Screen name="MyCar" component={MyCar} />
               <Stack.Screen
-                name="failureHistory"
+                name="FailureHistory"
                 options={{ title: "Historial de fallos", headerShown: true }}
                 component={HistorialFallos}
               />

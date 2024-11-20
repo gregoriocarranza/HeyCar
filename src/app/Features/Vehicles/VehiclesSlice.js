@@ -1,8 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getVehicles, registerVehicle } from "./VehiclesAction";
+import {
+  getVehicles,
+  getVehiclesFailureHistory,
+  registerVehicle,
+} from "./VehiclesAction";
 
 const initialState = {
   vehicles: [],
+  vehicleHistory: [],
   vehicle: null,
   loading: false,
   error: false,
@@ -35,6 +40,18 @@ const vehiclesSlice = createSlice({
         state.loading = false;
       })
       .addCase(getVehicles.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(getVehiclesFailureHistory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getVehiclesFailureHistory.fulfilled, (state, action) => {
+        state.vehicleHistory = action.payload;
+        state.loading = false;
+      })
+      .addCase(getVehiclesFailureHistory.rejected, (state, action) => {
         state.errorMessage = action.payload;
         state.error = true;
         state.loading = false;

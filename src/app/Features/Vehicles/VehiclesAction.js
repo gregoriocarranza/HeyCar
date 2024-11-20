@@ -57,3 +57,33 @@ export const getVehicles = createAsyncThunk(
     }
   }
 );
+
+export const getVehiclesFailureHistory = createAsyncThunk(
+  "vehicles/getVehiclesFailureHistory",
+  async (vehicleId, { rejectWithValue }) => {
+    try {
+      user = await getAccesTokenVerified();
+
+      const response = await fetch(
+        `${EXPO_PUBLIC_API_URL}/vehicles/${vehicleId}/failures`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.tokens?.accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);

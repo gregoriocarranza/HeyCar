@@ -42,7 +42,7 @@ export default async function registerForPushNotificationsAsync(
     }
 
     // Muestra el token en una alerta
-    Alert.alert("Token de Notificación", `Token para ${tokenType}: ${token}`);
+    // Alert.alert("Token de Notificación", `Token para ${tokenType}: ${token}`);
 
     return { token, type: tokenType };
   } catch (error) {

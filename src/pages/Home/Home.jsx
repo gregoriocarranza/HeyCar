@@ -70,7 +70,6 @@ export default function HomeScreen({ navigation }) {
               setSelectedVehicle("");
               return;
             }
-            // setSelectedVehicle(vehiclesData[0]?.id);
             const statusChecked = vehicleStatusChecker(vehiclesData[0]);
             setSelectedVehicleData({ ...vehiclesData[0], statusChecked });
           })
@@ -169,12 +168,12 @@ export default function HomeScreen({ navigation }) {
           />
         }
       >
-        <View
+        {/* <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text>Tipo de Token: {tokenType}</Text>
           <Button title="Cambiar Token Type" onPress={toggleTokenType} />
-        </View>
+        </View> */}
         <View style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={styles.vehicleContainer}>
             {vehiclesData?.length === 0 ? (
