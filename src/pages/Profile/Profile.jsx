@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Button as PaperButton, Card, IconButton } from "react-native-paper";
@@ -86,22 +87,27 @@ function Profile({ navigation }) {
   };
 
   const changeType = async () => {
-    const data = await registerForPushNotificationsAsync("EXPO");
-    dispatch(saveNotification(data))
-      .then(async (result) => {
-        SecureStore.setItem(
-          "NOTIFICATION_DATA",
-          JSON.stringify({
-            notification_token: result.payload.notification_token,
-            notification_type: result.payload.notification_type,
-          })
-        );
+    try {
+      const data = await registerForPushNotificationsAsync("EXPO");
+      Alert.alert("Data", JSON.stringify(data));
+      dispatch(saveNotification(data))
+        .then(async (result) => {
+          SecureStore.setItem(
+            "NOTIFICATION_DATA",
+            JSON.stringify({
+              notification_token: result.payload.notification_token,
+              notification_type: result.payload.notification_type,
+            })
+          );
 
-        console.log("notification token saved");
-      })
-      .catch((error) => {
-        console.error("Notification persisting error:", error);
-      });
+          console.log("notification token saved");
+        })
+        .catch((error) => {
+          console.error("Notification persisting error:", error);
+        });
+    } catch (error) {
+      Alert.alert("Error", `Error al enviar el token: ${error.message}`);
+    }
   };
 
   return (
