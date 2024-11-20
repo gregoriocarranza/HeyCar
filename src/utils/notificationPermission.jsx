@@ -8,11 +8,13 @@ export default async function registerForPushNotificationsAsync(
 ) {
   try {
     const projectId =
-      Constants?.expoConfig?.extra?.eas?.projectId ??
-      Constants?.easConfig?.projectId;
+      process.env.EXPO_PUBLIC_PROJECT_ID ||
+      Constants?.expoConfig?.extra?.eas?.projectId;
+
     if (!projectId) {
       Alert.alert("Project ID not found");
     }
+    console.log(projectId);
 
     // Solicita permisos de notificación
     const { status: existingStatus } =
@@ -49,7 +51,10 @@ export default async function registerForPushNotificationsAsync(
 
     return { token, type: tokenType };
   } catch (error) {
-    Alert.alert("Error", `Error al obtener el token: ${error.message}`);
+    Alert.alert(
+      "Error",
+      `Error al obtener el token: ${error.message}\n\nToken type: ${tokenType},\n\n ProjectID:${projectId}`
+    );
     throw error;
   }
 }

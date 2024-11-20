@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Button,
 } from "react-native";
 import { FontAwesome6, Ionicons, AntDesign } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
@@ -29,9 +28,7 @@ export default function HomeScreen({ navigation }) {
     error,
   } = useSelector((state) => state.vehicles);
 
-  const [isMounted, setIsMounted] = useState(false);
   const [userData, setUserData] = useState({});
-  const [tokenType, setTokenType] = useState("FCM");
   const [selectedVehicle, setSelectedVehicle] = useState("");
   const [selectedVehicleData, setSelectedVehicleData] = useState({});
   const isFocused = useIsFocused();
@@ -106,42 +103,6 @@ export default function HomeScreen({ navigation }) {
     loadUser();
   }, [isFocused]);
 
-  useEffect(() => {
-    if (isMounted) {
-      try {
-        console.log("ejecutando el cambio de token por variable");
-
-        const changeType = async () => {
-          const data = await registerForPushNotificationsAsync(tokenType);
-          dispatch(saveNotification(data))
-            .then(async (result) => {
-              SecureStore.setItem(
-                "NOTIFICATION_DATA",
-                JSON.stringify({
-                  notification_token: result.payload.notification_token,
-                  notification_type: result.payload.notification_type,
-                })
-              );
-
-              console.log("notification token saved");
-            })
-            .catch((error) => {
-              console.error("Notification persisting error:", error);
-            });
-        };
-        changeType();
-      } catch (error) {
-        console.error("Notification error:", error);
-      }
-    } else {
-      setIsMounted(true);
-    }
-  }, [tokenType]);
-
-  const toggleTokenType = () => {
-    setTokenType((prevType) => (prevType === "FCM" ? "EXPO" : "FCM"));
-  };
-
   const getStatusIcon = (status) => {
     switch (status) {
       case "OK":
@@ -168,12 +129,6 @@ export default function HomeScreen({ navigation }) {
           />
         }
       >
-        {/* <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text>Tipo de Token: {tokenType}</Text>
-          <Button title="Cambiar Token Type" onPress={toggleTokenType} />
-        </View> */}
         <View style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={styles.vehicleContainer}>
             {vehiclesData?.length === 0 ? (

@@ -7,6 +7,7 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Button as PaperButton, Card, IconButton } from "react-native-paper";
@@ -20,6 +21,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { CommonActions } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { getVehicles } from "../../app/Features/Vehicles/VehiclesAction";
+import registerForPushNotificationsAsync from "../../utils/notificationPermission";
+import { saveNotification } from "../../app/Features/Notification/NotificationAction";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -81,29 +84,24 @@ function Profile({ navigation }) {
       />
     );
   };
-  const getIcon = (role) => {
-    switch (role) {
-      case "conductor":
-        return (
-          <MaterialCommunityIcons
-            name="car"
-            size={16}
-            color="#FF6347"
-            style={styles.icon}
-          />
+
+  const changeType = async () => {
+    const data = await registerForPushNotificationsAsync("EXPO");
+    dispatch(saveNotification(data))
+      .then(async (result) => {
+        SecureStore.setItem(
+          "NOTIFICATION_DATA",
+          JSON.stringify({
+            notification_token: result.payload.notification_token,
+            notification_type: result.payload.notification_type,
+          })
         );
-      case "mecanico":
-        return (
-          <MaterialCommunityIcons
-            name="wrench"
-            size={16}
-            color="#4682B4"
-            style={styles.icon}
-          />
-        );
-      default:
-        return null;
-    }
+
+        console.log("notification token saved");
+      })
+      .catch((error) => {
+        console.error("Notification persisting error:", error);
+      });
   };
 
   return (
@@ -205,6 +203,12 @@ function Profile({ navigation }) {
           <IconButton icon="plus" size={24} color="#003366" />
           <Text style={styles.addVehicleText}>Agregar otro vehículo</Text>
         </TouchableOpacity>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>Tipo de Token: EXPO</Text>
+          <Button title="Enviar Token" onPress={changeType} />
+        </View>
       </ScrollView>
     </ScreenLayout>
   );
