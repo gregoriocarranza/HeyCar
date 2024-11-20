@@ -60,18 +60,49 @@ export const getVehicles = createAsyncThunk(
 
 export const getVehiclesFailureHistory = createAsyncThunk(
   "vehicles/getVehiclesFailureHistory",
-  async (vehicleId, { rejectWithValue }) => {
+  async (vehicle_id, { rejectWithValue }) => {
     try {
       user = await getAccesTokenVerified();
 
       const response = await fetch(
-        `${EXPO_PUBLIC_API_URL}/vehicles/${vehicleId}/failures`,
+        `${EXPO_PUBLIC_API_URL}/vehicles/${vehicle_id}/failures`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user?.tokens?.accessToken}`,
           },
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const postVehiclesFailureHistory = createAsyncThunk(
+  "vehicles/postVehiclesFailureHistory",
+  async (vehicle, { rejectWithValue }) => {
+    try {
+      user = await getAccesTokenVerified();
+
+      const response = await fetch(
+        `${EXPO_PUBLIC_API_URL}/vehicles/${vehicle?.vehicle_id}/failures`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.tokens?.accessToken}`,
+          },
+          body: JSON.stringify(vehicle),
         }
       );
 

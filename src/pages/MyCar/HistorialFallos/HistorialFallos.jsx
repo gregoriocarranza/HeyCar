@@ -14,8 +14,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getVehicles,
   getVehiclesFailureHistory,
+  postVehiclesFailureHistory,
 } from "../../../app/Features/Vehicles/VehiclesAction";
 import RNPickerSelect from "react-native-picker-select";
+import { Capitalize } from "../../../utils/StringsChangers";
 import AddFailureModal from "../../../Components/AddFailureModal/AddFailureModal";
 
 export default function HistorialFallos({ navigation }) {
@@ -78,8 +80,16 @@ export default function HistorialFallos({ navigation }) {
   }, [isFocused]);
 
   const handleAddFailure = (failureData) => {
-    console.log("Nueva falla registrada:", failureData);
-    // Aquí puedes despachar una acción de Redux o manejar los datos.
+    console.log("Nueva falla registrada:", {
+      ...failureData,
+      vehicle_id: selectedVehicleData?.id,
+    });
+    dispatch(
+      postVehiclesFailureHistory({
+        ...failureData,
+        vehicle_id: selectedVehicleData?.id,
+      })
+    );
   };
 
   const renderFallo = ({ item }) => {
@@ -90,9 +100,13 @@ export default function HistorialFallos({ navigation }) {
 
     return (
       <View style={styles.card}>
-        <Text style={styles.titulo}>{item?.title}</Text>
-        <Text style={styles.detalle}>{item?.km}</Text>
-        <Text style={styles.detalle}>{item?.report_type}</Text>
+        <View style={styles.info}>
+          <Text style={styles.titulo}>{item?.title}</Text>
+          <Text style={styles.detalle}>{item?.km} Km</Text>
+          <Text style={styles.detalle}>
+            Tipo de reporte: {Capitalize(item?.report_type)}
+          </Text>
+        </View>
         <View style={styles.footer}>
           <Text style={styles.fecha}>{formattedDate}</Text>
           <Text style={styles.estado}>
@@ -163,15 +177,18 @@ export default function HistorialFallos({ navigation }) {
             </View>
           }
         />
-        <TouchableOpacity
-          style={styles.exportButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.exportText}>Añadir Falla</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.exportButton}>
-          <Text style={styles.exportText}>Exportar</Text>
-        </TouchableOpacity>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.buttonText}>Añadir Falla</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton}>
+            <Text style={styles.buttonText}>Exportar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScreenLayout>
   );
