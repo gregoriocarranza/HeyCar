@@ -94,9 +94,9 @@ export default function HistorialFallos({ navigation }) {
 
   const renderFallo = ({ item }) => {
     const date = new Date(item?.created_at);
-    const formattedDate = `${date.getUTCDate()}/${
-      date.getUTCMonth() + 1
-    }/${date.getUTCFullYear()}`;
+    const formattedDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
 
     return (
       <View style={styles.card}>
