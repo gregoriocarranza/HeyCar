@@ -30,7 +30,7 @@ export const validateToken = async (tokens) => {
   const expiresIn = tokens.expiresIn * 1000;
 
   if (currentTime - tokenIssueTime >= expiresIn) {
-    console.log("El token ha expirado, intenta refrescarlo");
+    console.info("El token ha expirado, intenta refrescarlo");
     // return await refreshAccessToken(tokens.refreshToken);
     return false;
   }

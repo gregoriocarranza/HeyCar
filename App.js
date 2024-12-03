@@ -26,6 +26,7 @@ import HistorialFallos from "./src/pages/MyCar/HistorialFallos/HistorialFallos";
 import HistorialDeReparaciones from "./src/pages/MyCar/HistorialDeReparaciones/HistorialDeReparaciones";
 import ChatScreen from "./src/pages/Chat/ChatScreen";
 import ChatDetailScreen from "./src/pages/Chat/ChatDetail";
+import { getUserByJWT } from "./src/app/Features/User/UserAction";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,13 +49,13 @@ function App() {
       Notifications.addNotificationReceivedListener((notification) => {
         if (notification) {
           setNotification(notification);
-          console.log("Notification received in foreground:", notification);
+          console.info("Notification received in foreground:", notification);
         }
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("User interacted with notification:", response);
+        console.info("User interacted with notification:", response);
       });
 
     return () => {

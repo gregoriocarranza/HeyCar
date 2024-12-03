@@ -92,7 +92,6 @@ export default function HistorialDeReparaciones() {
   };
 
   const handleAddRepair = (repairData) => {
-    // console.log("Nueva reparacion registrada:", repairData);
     dispatch(
       postVehiclesRepairHistory({
         ...repairData,

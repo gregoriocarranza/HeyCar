@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,15 +9,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
-  ScrollView,
 } from "react-native";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import styles from "./ChatDetail.styles";
+import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
 const ChatDetailScreen = ({ route, navigation }) => {
   const { user, loading, error } = useSelector((state) => state.user);
-  const { chatTitle, chatImage } = route.params;
+  const isFocused = useIsFocused();
+  const { chatId, chatTitle, chatImage } = route.params;
   const [messages, setMessages] = useState([]);
   const [aiMessages, setAiMessages] = useState([
     {
@@ -55,8 +56,6 @@ const ChatDetailScreen = ({ route, navigation }) => {
       isSender: false,
     },
   ]);
-  console.log(user);
-
   const [inputText, setInputText] = useState("");
 
   const sendMessage = () => {
@@ -86,7 +85,6 @@ const ChatDetailScreen = ({ route, navigation }) => {
       ]);
     }, 3000);
   };
-
   const renderMessage = ({ item }) => (
     <View
       style={[

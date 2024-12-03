@@ -9,20 +9,9 @@ import { useIsFocused } from "@react-navigation/native";
 const ChatScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const { vehicles, loading, error } = useSelector((state) => state.vehicles);
-  const [chats, setChats] = useState([
-    {
-      id: 0,
-      vehicle: "Volkswagen Polo 2014",
-      message: "Escribime si tenes alguna duda!",
-      time: new Date(new Date().setHours(18, 51)).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      image: require("@/src/assets/VolkswagenPolo.png"),
-    },
-  ]);
+  const [chats, setChats] = useState([]);
   useEffect(() => {
-    if (vehicles.length > 0) {
+    if (vehicles.length > 0 && chats.length == 0) {
       vehicles?.forEach((element, index) => {
         setChats((prev) => [
           ...prev,
@@ -38,12 +27,32 @@ const ChatScreen = ({ navigation }) => {
           },
         ]);
       });
+      setChats((prev) => [
+        ...prev,
+        {
+          id: prev?.length + 1,
+          vehicle: "Volkswagen Polo 2014",
+          message: "Escribime si tenes alguna duda!",
+          time: new Date(new Date().setHours(18, 51)).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          image: require("@/src/assets/VolkswagenPolo.png"),
+        },
+      ]);
     }
   }, [isFocused]);
+
   const renderChatItem = ({ item }) => (
     <TouchableOpacity
       style={styles.chatContainer}
-      onPress={() => navigation.navigate("ChatDetail", { chatId: item.id })}
+      onPress={() =>
+        navigation.navigate("ChatDetail", {
+          chatId: item.id,
+          chatTitle: item.vehicle,
+          chatImage: item.image,
+        })
+      }
     >
       <Image source={item.image} style={styles.vehicleImage} />
       <View style={styles.chatInfo}>

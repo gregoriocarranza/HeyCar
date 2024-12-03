@@ -19,6 +19,7 @@ import { getVehicles } from "../../app/Features/Vehicles/VehiclesAction";
 import vehicleStatusChecker from "@/src/utils/VehicleStatus";
 import registerForPushNotificationsAsync from "../../utils/notificationPermission";
 import { saveNotification } from "../../app/Features/Notification/NotificationAction";
+import { getUserByJWT } from "@/src/app/Features/User/UserAction";
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ export default function HomeScreen({ navigation }) {
       if (jsonValue) {
         const result = JSON.parse(jsonValue);
         setUserData(result);
+        dispatch(getUserByJWT());
         dispatch(getVehicles())
           .then((result) => {
             if (vehiclesData?.length < 0) {
@@ -71,7 +73,7 @@ export default function HomeScreen({ navigation }) {
                 })
               );
 
-              console.log("notification token saved");
+              console.info("notification token saved");
             })
             .catch((error) => {
               console.error("Notification persisting error:", error);

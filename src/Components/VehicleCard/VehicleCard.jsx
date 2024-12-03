@@ -5,7 +5,7 @@ import styles from "../../pages/Profile/User.styles";
 
 const VehicleCard = ({ item, index }) => {
   const onRemove = () => {
-    console.log(item);
+    console.info(item);
   };
   return (
     <Card key={index} style={styles.vehicleCard}>

@@ -100,7 +100,7 @@ function Profile({ navigation }) {
             })
           );
 
-          console.log("notification token saved");
+          console.info("notification token saved");
         })
         .catch((error) => {
           console.error("Notification persisting error:", error);

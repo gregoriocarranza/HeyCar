@@ -14,9 +14,6 @@ export default async function registerForPushNotificationsAsync(
     if (!projectId) {
       Alert.alert("Project ID not found");
     }
-    console.log(projectId);
-
-    // Solicita permisos de notificación
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;

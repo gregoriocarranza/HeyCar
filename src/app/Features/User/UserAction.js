@@ -82,7 +82,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const healthCheck = async () => {
-  console.log("Iniciando solicitud a:", `${EXPO_PUBLIC_API_URL}/health`);
+  console.info("Iniciando solicitud a:", `${EXPO_PUBLIC_API_URL}/health`);
 
   try {
     const response = await fetch(`${EXPO_PUBLIC_API_URL}/health`, {
