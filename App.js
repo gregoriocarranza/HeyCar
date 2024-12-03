@@ -24,6 +24,8 @@ import TermsAndConditionsScreen from "./src/pages/terminos-politicas/TermsAndCon
 import * as Notifications from "expo-notifications";
 import HistorialFallos from "./src/pages/MyCar/HistorialFallos/HistorialFallos";
 import HistorialDeReparaciones from "./src/pages/MyCar/HistorialDeReparaciones/HistorialDeReparaciones";
+import ChatScreen from "./src/pages/Chat/ChatScreen";
+import ChatDetailScreen from "./src/pages/Chat/ChatDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -157,6 +159,8 @@ function App() {
                 }}
                 component={PrivacyPolicyScreen}
               />
+              <Stack.Screen name="ChatDetail" component={ChatDetailScreen} />
+              <Stack.Screen name="ChatScreen" component={ChatScreen} />
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Register" component={Register} />
             </Stack.Navigator>

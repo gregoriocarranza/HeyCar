@@ -24,8 +24,8 @@ const Footer = ({ currentRoute }) => {
       <FooterButton
         iconName="chat-bubble-outline"
         label="Chat-AI"
-        isActive={currentRoute === "Chat"}
-        onPress={() => navigation.navigate("Chat")}
+        isActive={currentRoute === "ChatScreen"}
+        onPress={() => navigation.navigate("ChatScreen")}
       />
       <FooterButton
         iconName="group"
