@@ -16,6 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
 const ChatDetailScreen = ({ route, navigation }) => {
+  const [messageIndex, setMessageIndex] = useState(0);
   const { user, loading, error } = useSelector((state) => state.user);
   const isFocused = useIsFocused();
   const { chatId, chatTitle, chatImage } = route.params;
@@ -25,34 +26,18 @@ const ChatDetailScreen = ({ route, navigation }) => {
       text: `Hola ${
         user?.name || "Santy"
       }, con la información que tengo, parece que el estado del motor es crítico. Podría tratarse de un problema con la correa de distribución o algo relacionado con el sistema de arranque. ¿Qué has intentado hacer hasta ahora?`,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
       isSender: false,
     },
     {
       text: "Entiendo. Es posible que esos intentos hayan agravado el problema. Te recomendaría que no intentes moverlo más. Lo mejor sería llamar a una grúa para evitar daños adicionales.",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
       isSender: false,
     },
     {
       text: "Puede ser grave, pero si tomas acción ahora, podrías reducir los daños. Llámale a tu mecánico lo antes posible. Si necesitas ayuda para contactar a alguien, puedo asistirte.",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
       isSender: false,
     },
     {
       text: "¡De nada! Espero que soluciones esto rápido y que tengas un viaje tranquilo.",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
       isSender: false,
     },
   ]);
@@ -79,11 +64,16 @@ const ChatDetailScreen = ({ route, navigation }) => {
       setMessages((prevMessages) => [
         ...prevMessages,
         {
-          ...aiMessages[0],
+          ...aiMessages[messageIndex],
           id: (prevMessages.length + 1).toString(),
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         },
       ]);
     }, 3000);
+    setMessageIndex((prev) => prev + 1);
   };
   const renderMessage = ({ item }) => (
     <View

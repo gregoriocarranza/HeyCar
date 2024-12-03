@@ -209,12 +209,12 @@ function Profile({ navigation }) {
           <IconButton icon="plus" size={24} color="#003366" />
           <Text style={styles.addVehicleText}>Agregar otro vehículo</Text>
         </TouchableOpacity>
-        <View
+        {/* <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text>Tipo de Token: EXPO</Text>
           <Button title="Enviar Token" onPress={changeType} />
-        </View>
+        </View> */}
       </ScrollView>
     </ScreenLayout>
   );

@@ -37,7 +37,7 @@ const ChatScreen = ({ navigation }) => {
             hour: "2-digit",
             minute: "2-digit",
           }),
-          image: require("@/src/assets/VolkswagenPolo.png"),
+          image: require("@/src/assets/Autos/VolkswagenPolo.png"),
         },
       ]);
     }

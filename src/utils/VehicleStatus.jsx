@@ -6,10 +6,15 @@ import Motor from "../assets/vehiclestatusPictures/Motor.svg";
 import Neumaticos from "../assets/vehiclestatusPictures/Neumaticos.svg";
 import Temperatura from "../assets/vehiclestatusPictures/Temperatura.svg";
 
-const vehicleStatusChecker = (statusData) => {
+export const vehicleStatusChecker = (statusData) => {
   const statusItems = [
     { id: 1, name: "Motor", status: statusData?.engine_status, img: Motor },
-    { id: 2, name: "Batería", status: statusData?.battery_status, img: Bateria },
+    {
+      id: 2,
+      name: "Batería",
+      status: statusData?.battery_status,
+      img: Bateria,
+    },
     { id: 3, name: "Frenos", status: statusData?.brakes_status, img: Frenos },
     {
       id: 4,
@@ -40,4 +45,8 @@ const vehicleStatusChecker = (statusData) => {
   return statusItems;
 };
 
-export default vehicleStatusChecker;
+export const StatusTypes = {
+  OK: "Ok",
+  CHECK: "Necesita revisión",
+  DANGER: "Estado crítico",
+};

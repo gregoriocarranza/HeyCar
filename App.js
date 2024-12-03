@@ -1,5 +1,5 @@
 import { View, SafeAreaView, Button, Modal, StyleSheet } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { registerRootComponent } from "expo";
@@ -21,50 +21,15 @@ import RegisterVehicleForm from "./src/Components/RegisterVehicleForm/RegisterVe
 import MyCar from "./src/pages/MyCar/MyCar";
 import PrivacyPolicyScreen from "./src/pages/terminos-politicas/PrivacyPolicyScreen";
 import TermsAndConditionsScreen from "./src/pages/terminos-politicas/TermsAndConditionsScreen";
-import * as Notifications from "expo-notifications";
 import HistorialFallos from "./src/pages/MyCar/HistorialFallos/HistorialFallos";
 import HistorialDeReparaciones from "./src/pages/MyCar/HistorialDeReparaciones/HistorialDeReparaciones";
 import ChatScreen from "./src/pages/Chat/ChatScreen";
 import ChatDetailScreen from "./src/pages/Chat/ChatDetail";
-import { getUserByJWT } from "./src/app/Features/User/UserAction";
 
 const Stack = createNativeStackNavigator();
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
-
 function App() {
-  const [notification, setNotification] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
-  useEffect(() => {
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        if (notification) {
-          setNotification(notification);
-          console.info("Notification received in foreground:", notification);
-        }
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.info("User interacted with notification:", response);
-      });
-
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
 
   useEffect(() => {
     const checkAuthentication = async () => {

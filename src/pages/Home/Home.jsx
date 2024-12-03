@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from "react-native";
 import { FontAwesome6, Ionicons, AntDesign } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as SecureStore from "expo-secure-store";
 import styles from "./Home.styles";
 import RNPickerSelect from "react-native-picker-select";
@@ -16,11 +16,19 @@ import { useIsFocused } from "@react-navigation/native";
 // import * as Sentry from "@sentry/react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getVehicles } from "../../app/Features/Vehicles/VehiclesAction";
-import vehicleStatusChecker from "@/src/utils/VehicleStatus";
+import { StatusTypes, vehicleStatusChecker } from "@/src/utils/VehicleStatus";
 import registerForPushNotificationsAsync from "../../utils/notificationPermission";
 import { saveNotification } from "../../app/Features/Notification/NotificationAction";
 import { getUserByJWT } from "@/src/app/Features/User/UserAction";
+import * as Notifications from "expo-notifications";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const {
@@ -35,6 +43,35 @@ export default function HomeScreen({ navigation }) {
   const isFocused = useIsFocused();
   const [refreshing, setRefreshing] = useState(false);
 
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        if (notification) {
+          setNotification(notification);
+          console.info("Notification received in foreground:", notification);
+        }
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.info(
+          "User interacted with notification:",
+          response.notification.request.content
+        );
+        navigation.navigate("FailureHistory");
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   // Sentry.captureMessage("Cargando home");
 
   const loadUser = async () => {
@@ -170,10 +207,15 @@ export default function HomeScreen({ navigation }) {
                         }
                       />
                       <Text style={styles.vehicleInfo}>
-                        {selectedVehicleData?.model || "Modelo desconocido"} -
-                        {selectedVehicleData?.brand || "Marca desconocida"} -
-                        {selectedVehicleData?.license_plate || "Sin patente"} -
-                        {selectedVehicleData?.year || "Año desconocido"} -
+                        {"Marca: " + selectedVehicleData?.brand ||
+                          "Marca desconocida"}{" "}
+                        -{" "}
+                        {"Patente: " + selectedVehicleData?.license_plate ||
+                          "Sin patente"}{" "}
+                        -{" "}
+                        {"Año: " + selectedVehicleData?.year ||
+                          "Año desconocido"}{" "}
+                        -{" "}
                         {selectedVehicleData?.km || "Kilometraje no disponible"}{" "}
                         km
                       </Text>
@@ -188,12 +230,12 @@ export default function HomeScreen({ navigation }) {
                     source={
                       selectedVehicleData?.image
                         ? { uri: selectedVehicleData?.image }
-                        : require("../../assets/emptyCar.png")
+                        : require("../../assets/Autos/tiggo-3.png")
                     }
                     style={styles.addVehicleIconImage}
                   />
                 </View>
-                <View style={styles.sectionview}>
+                {/* <View style={styles.sectionview}>
                   <View style={styles.sectionDivider} />
                   <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Advertencias</Text>
@@ -205,7 +247,7 @@ export default function HomeScreen({ navigation }) {
                       <Text style={styles.specValue}>{spec.value}</Text>
                     </View>
                   ))}
-                </View>
+                </View> */}
                 <View style={styles.sectionview}>
                   <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Estado del vehiculo</Text>
@@ -237,9 +279,7 @@ export default function HomeScreen({ navigation }) {
                                   },
                                 ]}
                               >
-                                {data?.status?.charAt(0).toUpperCase() +
-                                  data?.status?.slice(1).toLowerCase() ||
-                                  "sin estado"}
+                                {StatusTypes[data?.status] || "sin estado"}
                               </Text>
                             </View>
                           </View>
